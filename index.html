@@ -3,291 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencatat Keterlambatan Murid Melalui Telegram</title>
+    <title>Attendance System 2026 | Labschool</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Sora:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #0ea5e9;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0fdf4; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a, #020617);
+            color: #f8fafc;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
         }
-        button {
-            transition: all 0.15s ease-in-out;
-            transform: translateZ(0);
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        button:hover{
-            text-decoration: underline;
+        .login-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
         }
-        .logo-labschool {
-    /* The logo will take up 20% of the screen width */
-    width: 20vw; 
-    /* This ensures it doesn't get TOO small or TOO big */
-    min-width: 50px;
-    max-width: 150px;
-    
-    /* Auto margins center the element horizontally within its div */
-    margin-left: auto;
-    margin-right: auto;
-    display: block; 
-}
+        .login-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+            outline: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(36, 97, 228, 0.4);
+        }
+        .hidden-section { display: none; }
+        
+        /* Gaya Tombol Dinamis */
+        .btn-action {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-recording {
+            background: rgba(225, 29, 72, 0.2) !important;
+            color: #fb7185 !important;
+            border-color: rgba(225, 29, 72, 0.4) !important;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+        }
+        .live-text {
+            color: #38bdf8;
+            font-style: italic;
+        }
     </style>
 </head>
-<body class="p-2">
+<body class="p-6">
 
-    <div class="w-full max-w-lg bg-white shadow-2xl rounded-3xl p-6 md:p-8 space-y-6 border border-green-200 transform transition-all duration-300 hover:shadow-green-300/50">
-        <img class="logo-labschool" src="logo-labs.png" alt="Labschool Logo">
-        <h1 class="text-3xl font-extrabold text-green-700 text-center">Pencatat Keterlambatan Atau Izin Sekolah</h1>
-        <p class="text-center text-sm text-gray-500">Ucapkan nama, alasannya, pilih kelas, dan kirim data.</p>
-
-        <h2 class="text-xl font-bold text-green-700 pt-2">1. Nama Murid</h2>
-        <div class="bg-green-50 border-2 border-green-300/50 rounded-xl p-2 space-y-3 shadow-inner">
-            <div id="statusName" class="text-lg font-bold text-green-700">Status Nama: Belum dimulai</div>
-            <div class="bg-white p-1 rounded-lg border border-gray-200 min-h-[2.5rem] whitespace-pre-wrap shadow-sm">
-                <p id="outputName" class="text-gray-800 text-base font-medium">Tekan tombol 'Ucapkan Nama Murid'.</p>
-                <p class="text-gray-400 text-xs mb-1 font-semibold">Hasil Ucapan Nama Murid:</p>
-            </div>
-            <div class="flex space-x-2">
-                <button id="startNameBtn" class="flex-1 px-4 py-2 bg-green-600 text-white font-bold rounded-xl shadow-md shadow-green-400/50 hover:bg-green-700 disabled:opacity-50 disabled:shadow-none">
-                    Ucapkan Nama
-                </button>
-                <button id="stopNameBtn" disabled class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl shadow-md shadow-red-400/50 hover:bg-red-700 disabled:opacity-50 disabled:shadow-none w-1/3">
-                    Stop
-                </button>
-            </div>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="w-full max-w-md glass-card rounded-[2rem] p-10 space-y-8">
+        <div class="text-center">
+            <h2 style="font-family: 'Sora';" class="text-3xl font-extrabold tracking-tight mb-2">Sign In</h2>
+            <p class="text-slate-400 text-sm">Pencatatan Keterlambatan</p>
+            <img src="logo-labs.png" alt="Yellow and blue school emblem with torch and text universitas negeri jakarta labschool" class="w-200 h-200 mx-auto mt-4">
         </div>
-
-        <h2 class="text-xl font-bold text-blue-700 pt-4">2. Alasan Keterlambatan Atau Izin</h2>
-        <div class="bg-blue-50 border-2 border-blue-300/50 rounded-xl p-2 space-y-3 shadow-inner">
-            <div id="statusReason" class="text-lg font-bold text-blue-700">Status Alasan: Belum dimulai</div>
-            <div class="bg-white p-1 rounded-lg border border-gray-200 min-h-[0rem] whitespace-pre-wrap shadow-sm">
-                <p id="outputReason" class="text-gray-800 text-base font-medium">Tekan tombol 'Ucapkan Alasan Murid'.</p>
-                <p class="text-gray-400 text-xs mb-1 font-semibold">Hasil Ucapan Alasan Keterlambatan:</p>
+        <div class="space-y-4">
+            <div>
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest ml-1">Username</label>
+                <input type="text" id="username" class="login-input w-full p-4 rounded-2xl mt-1 text-white" placeholder="ID Number">
             </div>
-            <div class="flex space-x-2">
-                <button id="startReasonBtn" class="flex-1 px-4 py-2 bg-blue-600 text-white font-bold rounded-xl shadow-md shadow-blue-400/50 hover:bg-blue-700 disabled:opacity-50 disabled:shadow-none">
-                    Ucapkan Alasan
-                </button>
-                <button id="stopReasonBtn" disabled class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl shadow-md shadow-red-400/50 hover:bg-red-700 disabled:opacity-50 disabled:shadow-none w-1/3">
-                    Stop
-                </button>
+            <div>
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-widest ml-1">Password</label>
+                <input type="password" id="password" class="login-input w-full p-4 rounded-2xl mt-1 text-white" placeholder="••••••••">
             </div>
+            <button onclick="handleLogin()" class="btn-primary w-full py-4 rounded-2xl font-bold text-white mt-4">AUTHENTICATE</button>
+            <p id="loginError" class="text-rose-500 text-xs text-center font-medium h-4"></p>
         </div>
-
-        <h2 class="text-xl font-bold text-purple-700 pt-4">3. Pilih Kelas</h2>
-        <div>
-            <label for="classDropdown" class="sr-only">Pilih Kelas Murid:</label>
-            <select id="classDropdown" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500 shadow-sm text-gray-700">
-                <option value="" disabled selected>--- Pilih Kelas ---</option>
-                <option value="XI-A">XI-A</option>
-                <option value="XI-B">XI-B</option>
-                <option value="XI-C">XI-C</option>
-                <option value="XI-D">XI-D</option>
-                <option value="XI-E">XI-E</option>
-                <option value="XI-F">XI-F</option>
-                <option value="XI-G">XI-G</option>
-                <option value="XI-H">XI-H</option>
-                <option value="XI-I">XI-I</option>
-            </select>
-        </div>
-        
-        <div class="bg-gray-100 border border-gray-300 rounded-xl p-2 space-y-2 shadow-inner">
-            <div id="message" class="text-sm font-medium min-h-[1.25rem] text-center"></div>
-        </div>
-
-        <button id="sendBtn" disabled class="w-full px-6 py-3 bg-purple-600 text-white font-extrabold rounded-xl shadow-xl shadow-purple-400/50 hover:bg-purple-700 disabled:opacity-50 disabled:shadow-none">
-            4. Kirim Data Keterlambatan
-        </button>
-        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/1cKHdTo9u0ZymJdPGSh6nq?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
 
-    <script type="text/javascript">
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    <!-- MAIN DASHBOARD -->
+    <div id="mainDashboard" class="hidden-section w-full max-w-2xl glass-card rounded-[2.5rem] p-8 md:p-12 space-y-10">
+        <header class="flex justify-between items-center border-b border-white/5 pb-6">
+            <div>
+                <h1 style="font-family: 'Sora';" class="text-2xl font-bold text-white">Pencatatan Keterlambatan</h1>
+                <p id="userDisplay" class="text-xs text-sky-400 font-semibold tracking-tighter uppercase"></p>
+                <img src="logo-labs.png" alt="Logo Labs" class="w-160 h-160 absolute top-4 right-4 opacity-10 pointer-events-none">
+            </div>
+            <button onclick="location.reload()" class="text-slate-500 hover:text-white text-xs font-bold transition-colors">LOGOUT</button>
+        </header>
 
-        // --- KONFIGURASI TELEGRAM & MAPPING ---
+        <!-- SEKSI 01: NAMA -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs font-bold border border-sky-500/30">01</span>
+                <h3 class="font-semibold text-slate-200">IDENTIFIKASI SUARA</h3>
+            </div>
+            <div class="bg-black/20 rounded-3xl p-6 border border-white/5">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="statusName" class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Status: Ready</div>
+                    <div class="text-[10px] uppercase tracking-[0.2em] text-sky-500 font-bold">Live Transcript</div>
+                </div>
+                <p id="liveTranscriptName" class="live-text text-sm mb-2 min-h-[1.2rem] opacity-70 italic">Menunggu suara...</p>
+                <p id="outputName" class="text-xl font-bold text-white min-h-[3rem] border-t border-white/5 pt-2">Sebutkan Nama & Kelas...</p>
+                
+                <div class="mt-6">
+                    <button id="toggleNameBtn" class="btn-action w-full bg-white/5 hover:bg-white/10 py-4 rounded-xl text-sm font-bold transition-all">
+                        START RECORDING
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKSI 02: ALASAN -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold border border-purple-500/30">02</span>
+                <h3 class="font-semibold text-slate-200">ALASAN & KETERANGAN</h3>
+            </div>
+            <div class="bg-black/20 rounded-3xl p-6 border border-white/5">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="statusReason" class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Status: Waiting</div>
+                    <div class="text-[10px] uppercase tracking-[0.2em] text-purple-500 font-bold">Live Transcript</div>
+                </div>
+                <p id="liveTranscriptReason" class="live-text text-sm mb-2 min-h-[1.2rem] opacity-70 italic">...</p>
+                <p id="outputReason" class="text-lg font-medium text-slate-300 min-h-[3rem] border-t border-white/5 pt-2">Sebutkan alasan anda...</p>
+                
+                <div class="mt-6">
+                    <button id="toggleReasonBtn" class="btn-action w-full bg-white/5 hover:bg-white/10 py-4 rounded-xl text-sm font-bold transition-all">
+                        START RECORDING
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="pt-4">
+            <button id="sendBtn" disabled class="btn-primary w-full py-5 rounded-3xl font-black text-white text-lg tracking-widest disabled:opacity-20 disabled:grayscale transition-all uppercase">
+                Submit Attendance
+            </button>
+            <p id="message" class="text-center text-xs mt-4 font-medium h-4"></p>
+        </div>
+    </div>
+
+    <script>
+        const USERS = { "Pak Farhan": "farhan123", "Pak Maulana": "maulana123" };
+
+        function handleLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const error = document.getElementById('loginError');
+            if(USERS[u] && USERS[u] === p) {
+                document.getElementById('loginPage').classList.add('hidden-section');
+                document.getElementById('mainDashboard').classList.remove('hidden-section');
+                document.getElementById('userDisplay').textContent = `Agent: ${u}`;
+            } else {
+                error.textContent = "INVALID CREDENTIALS";
+                setTimeout(() => error.textContent = "", 3000);
+            }
+        }
+
+        // --- DATABASE SISWA ---
+        const studentDatabase = [
+            "Aghaffan Satria Akbar XI-A", "Anindya Nuraini Pakpahan XI-A", "Aquilanny Martoprawiro XI-A", "Ayesha Leilani XI-A", "Christian Joshua Nathaniel Bonatua Siagian XI-A", "Dion Raffael Prihandono XI-A", "Dirky Dimitri Suryono XI-A", "Dyah Kiara Kalyana Tantri XI-A", "Dymitri Tobias Davin Hasiholan Gultom XI-A", "Eijaz Eshanayyan XI-A", "Fabien Eanka Jedidiah XI-A", "Farras Baswara Sakti XI-A", "Farrenerol Gaizka Susanto XI-A", "Fathimah Angelica Alatas XI-A", "Gracia Abigail Laquisha Panjaitan XI-A", "I Gede Maheswara Chandra Karmany XI-A", "Keanan Athaya Kurniawan XI-A", "Khandra Rafa Fathian XI-A", "Leander Rafferty Karsten XI-A", "Malvalena Aneira Larasati XI-A", "Michaela Kalista Susilo XI-A", "Michalah Allaindon Hasudungan Siregar XI-A", "Muhammad Abdurrahman Rashad XI-A", "Muhammad Arkan Zakie XI-A", "Musyaffa Radhika Sani XI-A", "Nadhif Safei Daulay XI-A", "Nazhefa Arkanda Wahyudi XI-A", "Nazril Althafurrahman Ode XI-A", "Noah Jessenorio Parmenas XI-A", "Rafi Nashra Zafa Harahap XI-A", "Raihana Luthfiya Witoyo XI-A", "Salsabila Raihanah Mughni XI-A", "Shirley Aretha Yusarizqi XI-A", "Sultan Mikail Asadel Tayib Napis XI-A", "Zahra Khalisha Laksana XI-A", "Zaira Arianna Nifsan XI-A", "Zerrin Nashita Bahwal XI-A",
+            "Ahmad Mahmud Movadhy Ramadhan XI-B", "Akmal Deasafaputra XI-B", "Aleesha Vanandya Shafiya Suprihadi XI-B", "Annisa Fadiyah Muti XI-B", "Bianca Alexandreta Situmorang XI-B", "Caesar Gerrardo Porta XI-B", "Daffa Lakeswara XI-B", "Diva Sabila Anwar XI-B", "Evan Alvaro Putra Sihombing XI-B", "Farshad Rayyan Akhtara XI-B", "Gilbert Timothy Olodeo Situmorang XI-B", "Isfan Jauhar Saladin XI-B", "Jenaia Aqeela Bariu Putri XI-B", "Jeovanna Cartenzia Sitepu XI-B", "Jethro Yordano Haposan Natongam XI-B", "Kirana Anindya Prasetya XI-B", "Kyra Torrita XI-B", "Lavina Jasmine Cettakeira Hermawan XI-B", "Lukas Rodo Dimitrio Situmorang XI-B", "Mayla Azzahra Putri XI-B", "Mhd. Chairul Azzam Al Faruk XI-B", "Muhammad Bimasto Agastya Kusumaputra XI-B", "Muhammad Kaisan Alfarizi XI-B", "Muhammad Rangga Maheswara XI-B", "Nabil Abrar XI-B", "Namira Aishwarya Prameswari XI-B", "Nata Sudira Adhisakti Satriadi XI-B", "Naufal Khair Al Ghifari XI-B", "Nicolas Nathan Abimanyu XI-B", "Raditya Fadhil Arinanda XI-B", "Raihan Amaroo Darmawan XI-B", "Syandana Zahin Hadinata XI-B", "Thoriq Abqory Salman XI-B", "Valerie Minerva Ascarya XI-B", "Vania Marissa Fayola Ritonga XI-B", "Yasmin Zahira Musadi XI-B", "Zahra Ramadhani Alfitri XI-B",
+            "Adam Evan Nawwara XI-C", "Adyatma Satya Prawira XI-C", "Adzkiya Mayritza Alhaura XI-C", "Aleeza Safiya Ardiansyah XI-C", "Alfkaysar Muhammad Aqsha Adam XI-C", "Algifari Agatha Lee XI-C", "Alrescha Aji Damiri XI-C", "Anindia Valeria Wahyuni XI-C", "Arasha Fazil Rafinanda XI-C", "Athaya Quamilla Imam XI-C", "Cahyo Aji Nugroho XI-C", "Chaska Oliver Nugroho XI-C", "Danish Ahmad Satria XI-C", "Fadri Syailendra Azra XI-C", "Fakhirah Tamaam Al Khansa XI-C", "Fathiya Nahla Assyifa XI-C", "Fayza Mahya Khayyira XI-C", "Firas Arsenio Jermal Ginting XI-C", "Ghiffari Azka Musyaffa XI-C", "Javier Prabu Kusumadita XI-C", "Kaina Zakiyardisa Putri XI-C", "Keenan Ahnaf Tristan Kusumah XI-C", "Kevina Atalie XI-C", "Malika Sasikirana Putri Mulyanto XI-C", "Muhammad Arfan Faizan XI-C", "Nabil Athadaffa Muliawan XI-C", "Najwa Nabila XI-C", "Rafa Almero XI-C", "Rakha Ilyasa Rizki Siregar XI-C", "Rasya Adli Radityo XI-C", "Rausyan Fikri Luqman XI-C", "Reia Kalila Armand XI-C", "Revalya Andini Putri XI-C", "Sabrina Aulia Susanto XI-C", "Vyandra Karavala Nugraha XI-C", "Zhafif Muhammad Loverien XI-C", "Zidni Adam Zayyidane Mochtar XI-C",
+            "Aisyah Nurfitria XI-D", "Akhtar Faeyzano Ahmad XI-D", "Anandirta Abdurahman Irfan XI-D", "Anindya Kiyasah Kidhi XI-D", "Aqila Aisyamira XI-D", "Azalea Akbar XI-D", "Bara Aji Narendra XI-D", "Basel Banna Seno XI-D", "Dafa Arashi Rafinanda XI-D", "Damarnusa Parama AjI XI-D", "Dinara Wijaya XI-D", "Elvira Anindya Putri XI-D", "Faiq Miqdad Husaini XI-D", "Keisha Iliana Danielle Andryananto XI-D", "Khairil Rafi Abdan XI-D", "Kiano Asadel XI-D", "Kirana Aqila Putri Wicaksono XI-D", "Laquisha Dayu Mustofa XI-D", "Malika Alisha Hubeis XI-D", "Mikal Muhammad Athaya Saragih XI-D", "Muhammad Aqilla Syahreza XI-D", "Muhammad Athar Al Ghazali XI-D", "Muhammad Bhre Zidane Pribadi XI-D", "Muhammad Farizarrasyiid XI-D", "Muhammad Fatih Akbar XI-D", "Muhammad Ilham Nurilmi XI-D", "Muhammad Mikala Hasya XI-D", "Muhammad Noby Ghazali XI-D", "Nabil Hazmi Ramadhan XI-D", "Nadine Meara Syafanee XI-D", "Prabaswara Arshad Nugraha XI-D", "Rafa Radityarizqi XI-D", "Ratu Adeline Fidelia Permata XI-D", "Siti Aisyah Hatta XI-D", "Tristan Ahnaf Hartanto XI-D", "Zahra Fadila Larasati Hendarto XI-D", "Zheira Daania Sukma Syarif XI-D",
+            "Abimanyu Malik Wibowo XI-E", "Ahmad Mufid Athaya XI-E", "Aiko Naura Syalma Hakim XI-E", "Alfath Rafi Ibrahim XI-E", "Amartya Brahimi Atmawidjaja XI-E", "Aretha Putri Aguska XI-E", "Arkha Enzi Anagi XI-E", "Asytar Ilya Heruwido XI-E", "Azka Rizki Budi Nugroho XI-E", "Bethari Paramanindya XI-E", "Clarissa Elvina Meagan XI-E", "Devinca Alsha Mahira Bramantyo XI-E", "Eqbal Fadlillah XI-E", "Fakhri Ramadhan Firdaus XI-E", "Gama Berwyn Rinaldi XI-E", "Garuda Tristanka Purboyuwono XI-E", "Ghaida Rana Faiza XI-E", "Haikal Tristan Hidajat XI-E", "Keenan Maula Putra Swara XI-E", "Keira Deasty Primadiawan XI-E", "Khanza Pradharicca XI-E", "Lakeysha Alaura Rakhman XI-E", "Maura Amberlee Sidharta XI-E", "Moza Hiranny Camille XI-E", "Muazzam Abilio XI-E", "Muhammad Azfir Aufa XI-E", "Muhammad Nur Fikri XI-E", "Nadif Yaafi Yudistira XI-E", "Nailahana Zhafira Wardhana XI-E", "Parisya Nararya Progestian XI-E", "Rafky Abqary Basri XI-E", "Rayhansyah Nur Kamal XI-E", "Rayyaan Aqeelano Makalam XI-E", "Reyhana Mahveen Ghania XI-E", "Syahira Nayla Andarili XI-E", "Syifano Ariba Rahman XI-E",
+            "Alia Hutami Larasati XI-F", "Alika Almira Priyono XI-F", "Altair Raza Wibowo XI-F", "Anita Putri Ramadhani XI-F", "Annisa Viadine Lakisha XI-F", "Araminta Bian Ramadhani XI-F", "Arviandra Suryo Indarto XI-F", "Arzachel Ramadhan Adhitya XI-F", "Atalla Ayman Devandra XI-F", "Calista Nadine Etikaputri XI-F", "Daffa Argya Fazil XI-F", "Fadhila Zahra Laksanadewi XI-F", "Fakhri Ahmad Haidar XI-F", "Farania Rabbani XI-F", "Farrelazhka Eelco Gyandra XI-F", "Fayez Putra Dewa XI-F", "Gilda Cordelia Agus Cik XI-F", "Hirsy Muhammad Treciozoe Nugraha XI-F", "Jasmine Balqis Zahirah XI-F", "Kirano Adnan Yudhosono XI-F", "Kimi Arka Wisesa XI-F", "Marshal Rizky Raditya XI-F", "Mikail Alifa Hanief XI-F", "Muhammad Langit Hafizi XI-F", "Muhammad Nararya Nur Hidayat XI-F", "Muhammad Rifat Sahnaufal Lubis XI-F", "Nala Janeeta Tianti XI-F", "NayyarA Fatiha Fajardini XI-F", "Nindya Alisha Avenzora XI-F", "Orty Muzziza Ramadhan XI-F", "Raka Anandityo Atallah XI-F", "Safa Tiara Salsabila XI-F", "Siti Fakhirah Wiraatmadja XI-F", "Sulthan Airend Nienda XI-F", "Syazwina Mazaya Rahman XI-F", "Tan Muhammad Rasyid Zailani XI-F", "Thoriq Baskara Istiawan XI-F",
+            "Alaina Nirwasita Inessa XI-G", "Amanda Callysta Firmansyah XI-G", "Andhika Bramantyo XI-G", "Arsya Ackmar Prastiyo XI-G", "Audrielle Ionna Kacaribu XI-G", "Bintang El Justicia XI-G", "Danisa Amira Nurjannah XI-G", "Devina Zahra Kamilah XI-G", "Evan Brilian Golfiano XI-G", "Faeyza Neydan XI-G", "Farah Armita Almardhia XI-G", "Farish Rizky Triwiyadi XI-G", "Flavia Alicia Alexandra Purbastia XI-G", "Hibrizy Muhammad Alharits XI-G", "Idea Pilar Arzarita XI-G", "Kiranamartha Murtiati Adnan XI-G", "Muhammad Ghani Asshaka XI-G", "Naura Athaya Zahirah XI-G", "Ni Made Ayu Keya Lakhsmi Divyananda XI-G", "Rafael Tobias Pardamean Pandjaitan XI-G", "Raina Premiera Gumay XI-G", "Raiqa Adzra Santosa XI-G", "Ranugunar Savahasta XI-G", "Risyabelle Nichole Wiryawan XI-G", "Wilova Serafina Wibowo XI-G",
+            "Alexandria Latishaputri Firmanda XI-H", "Arkan Nibroos Aqilby XI-H", "Askar Nabil Akbar Gunawan XI-H", "Atanisa Danastri Nabilah XI-H", "Claudia Kalista Rahdian XI-H", "Devo Farrelio XI-H", "Fiorenza Angelica XI-H", "Gina Fara Nauli XI-H", "Kayla Nafisah Romel XI-H", "Kenzie Athillah Khrisnamurti XI-H", "Khansa Aqmarini Nabilah XI-H", "Kirana Budhi Mahira XI-H", "Malik Adhwa Aulia XI-H", "Muhammad Moreno Rizkinanda XI-H", "Muthiia Syifa Abdillah XI-H", "Naomi Aisha Putri XI-H", "Raeesha Purnama Nayla Firmansyah XI-H", "Raffa Aqillah Makis XI-H", "Rafif Davin Ramadhan XI-H", "Raisya Kirana Dewintri XI-H", "Rania Muthiah XI-H", "Rasendriya Orion Nizam XI-H", "Ratu Amabelle Muhammad XI-H", "Sutan Fathur Baihaqie XI-H", "Tibiadzka Keiko Abimata XI-H", "Zayyanah Khalisa Izzati XI-H",
+            "Airlangga Satria Aribowo XI-I", "Almaira Saffa Zainasta XI-I", "Amabel Nuralmira Siswono Putri XI-I", "Amira Hawra Anggia XI-I", "Athan Rashad Santoso XI-I", "Azaria Arundhati Sumito XI-I", "Daffa Gantari Adhyaksa XI-I", "Kenzie Asadel Kurniawan XI-I", "Kilau Kinasih Putri Khameshwari XI-I", "Mentari Alya Shaliha XI-I", "Mohammad Rafi Adiwitya XI-I", "Muhammad Azka Waliy Hasya XI-I", "Muhammad Bimo Indra Prakoso XI-I", "Muhammad Daffa Abinaya XI-I", "Nabila Carissa Balqis XI-I", "Nadheera Ayesha Putri Rahmat XI-I", "Oqandrue Aditya Muliono XI-I", "Qinthara Annaasha Shyana XI-I", "Safina Zahra XI-I", "Shafwah Khaldaa Perkasa XI-I", "Sharita Kayla Ardhani XI-I", "Sofie Fellah Adrian XI-I", "Syahra Athaya Yusuf XI-I", "Zakia Uli Kirana XI-I", "Zyta Zhafif Zainina Restianto XI-I"
+        ];
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let rec;
+        let finalMatchedStudent = ""; 
+        let lastTranscriptReason = "";
+        let detectedClassCode = "";
+        let currentTarget = null;
+        let isRecording = false;
+
         const TELEGRAM_TOKEN = "8094088254:AAHhx11hS3pBMyWrqjxKrd3oeRbA3joeB5c";
-        
-        // GANTI PLACEHOLDER DENGAN ID GRUP MASING-MASING
         const GROUP_MAPPING = {
-            "XI-A": "-5085538452",
-            "XI-B": "-5001094054",
-            "XI-C": "-5066075858",
-            "XI-D": "-5072132169",
-            "XI-E": "-5008603225",
-            "XI-F": "-5099735129",
-            "XI-G": "-4913369002",
-            "XI-H": "-4876614085",
-            "XI-I": "-5006716309"
+            "XI-A": "-5085538452", "XI-B": "-5001094054", "XI-C": "-5066075858",
+            "XI-D": "-5072132169", "XI-E": "-5008603225", "XI-F": "-5099735129",
+            "XI-G": "-4913369002", "XI-H": "-4876614085", "XI-I": "-5006716309"
         };
 
-        const PABBLY_WEBHOOK_URL = 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY0MDYzZjA0M2Q1MjY4NTUzMDUxMzAi_pc'; 
-
-        // DOM References
-        const startNameBtn = document.getElementById("startNameBtn");
-        const stopNameBtn = document.getElementById("stopNameBtn");
-        const statusNameEl = document.getElementById("statusName");
-        const outputNameEl = document.getElementById("outputName");
-        const startReasonBtn = document.getElementById("startReasonBtn");
-        const stopReasonBtn = document.getElementById("stopReasonBtn");
-        const statusReasonEl = document.getElementById("statusReason");
-        const outputReasonEl = document.getElementById("outputReason");
-        const sendBtn = document.getElementById("sendBtn");
-        const messageEl = document.getElementById("message");
-        const classDropdown = document.getElementById("classDropdown");
-
-        let rec;
-        let lastTranscriptName = "";
-        let lastTranscriptReason = "";
-        let currentRecordingTarget = null;
-
-        function showMessage(text, type = 'info') {
-            messageEl.textContent = text;
-            messageEl.classList.remove('text-red-600', 'text-green-600', 'text-blue-600');
-            if (type === 'error') messageEl.classList.add('text-red-600');
-            else if (type === 'success') messageEl.classList.add('text-green-600');
-            else messageEl.classList.add('text-blue-600');
-            setTimeout(() => { messageEl.textContent = ""; }, 5000);
-        }
-
-        function checkSendButton() {
-            const isReady = lastTranscriptName && lastTranscriptReason && classDropdown.value;
-            sendBtn.disabled = !isReady;
-        }
-
-        if (!SpeechRecognition) {
-            outputNameEl.textContent = "Browser tidak mendukung Speech API.";
-        } else {
+        if (SpeechRecognition) {
             rec = new SpeechRecognition();
             rec.lang = "id-ID";
-            rec.interimResults = false;
-            rec.continuous = false; 
+            rec.interimResults = true;
 
             rec.onstart = () => {
-                if (currentRecordingTarget === 'name') {
-                    statusNameEl.textContent = "Status Nama: 🟢 Mendengarkan...";
-                    outputNameEl.textContent = "Sedang mendengarkan...";
-                    startNameBtn.disabled = true;
-                    stopNameBtn.disabled = false;
-                } else {
-                    statusReasonEl.textContent = "Status Alasan: 🟢 Mendengarkan...";
-                    outputReasonEl.textContent = "Sedang mendengarkan...";
-                    startReasonBtn.disabled = true;
-                    stopReasonBtn.disabled = false;
+                isRecording = true;
+                const isName = currentTarget === 'name';
+                const btn = isName ? document.getElementById("toggleNameBtn") : document.getElementById("toggleReasonBtn");
+                const status = isName ? document.getElementById("statusName") : document.getElementById("statusReason");
+                
+                btn.textContent = "STOP RECORDING";
+                btn.classList.add('btn-recording');
+                status.textContent = "Status: LISTENING...";
+            };
+
+            rec.onresult = (event) => {
+                let liveText = "";
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    liveText += event.results[i][0].transcript;
+                }
+
+                const liveDisplay = currentTarget === 'name' ? document.getElementById("liveTranscriptName") : document.getElementById("liveTranscriptReason");
+                liveDisplay.textContent = `"${liveText.trim()}"`;
+
+                if (event.results[0].isFinal) {
+                    let cleanText = liveText.replace(/[.,]/g, "").trim();
+                    if (currentTarget === 'name') {
+                        finalMatchedStudent = matchStudentByVoice(cleanText);
+                        document.getElementById("outputName").textContent = finalMatchedStudent;
+                    } else {
+                        lastTranscriptReason = cleanText;
+                        document.getElementById("outputReason").textContent = cleanText.toUpperCase();
+                    }
                 }
             };
 
             rec.onend = () => {
-                if (currentRecordingTarget === 'name') {
-                    statusNameEl.textContent = "Status Nama: 🟡 Selesai.";
-                    startNameBtn.disabled = false;
-                    stopNameBtn.disabled = true;
-                } else {
-                    statusReasonEl.textContent = "Status Alasan: 🟡 Selesai.";
-                    startReasonBtn.disabled = false;
-                    stopReasonBtn.disabled = true;
-                }
-                currentRecordingTarget = null;
-                checkSendButton();
-            };
-
-            rec.onresult = (event) => {
-                const text = event.results[0][0].transcript;
-                if (currentRecordingTarget === 'name') {
-                    lastTranscriptName = text.trim().toUpperCase();
-                    outputNameEl.textContent = lastTranscriptName;
-                } else {
-                    lastTranscriptReason = text.trim();
-                    outputReasonEl.textContent = lastTranscriptReason;
-                }
-            };
-        }
-
-        startNameBtn.onclick = () => { currentRecordingTarget = 'name'; rec.start(); };
-        stopNameBtn.onclick = () => rec.stop();
-        startReasonBtn.onclick = () => { currentRecordingTarget = 'reason'; rec.start(); };
-        stopReasonBtn.onclick = () => rec.stop();
-        classDropdown.onchange = checkSendButton;
-
-        function getCurrentDateTime() {
-            const now = new Date();
-            return {
-                time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }),
-                date: now.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' })
-            };
-        }
-
-        // --- FUNGSI KIRIM UTAMA ---
-        sendBtn.onclick = async () => {
-            const selectedClass = classDropdown.value;
-            const targetGroupId = GROUP_MAPPING[selectedClass];
-            const dateTime = getCurrentDateTime();
-
-            if (!targetGroupId || targetGroupId.includes("ID_GRUP")) {
-                return showMessage(`Error: ID Grup untuk ${selectedClass} belum diatur!`, 'error');
-            }
-
-            sendBtn.disabled = true;
-            showMessage("Sedang mengirim data...", 'info');
-
-            // 1. Kirim ke Pabbly
-            const payload = {
-                raw_data: `${dateTime.time}|${lastTranscriptName}|${selectedClass}|${lastTranscriptReason}|${dateTime.date}`,
-                nama_murid: lastTranscriptName,
-                kelas_murid: selectedClass,
-                alasan_keterlambatan: lastTranscriptReason,
-                tanggal: dateTime.date,
-                waktu: dateTime.time
-            };
-
-            try {
-                // Eksekusi Pabbly
-                await fetch(PABBLY_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                isRecording = false;
+                const btnName = document.getElementById("toggleNameBtn");
+                const btnReason = document.getElementById("toggleReasonBtn");
+                
+                [btnName, btnReason].forEach(b => {
+                    b.textContent = "START RECORDING";
+                    b.classList.remove('btn-recording');
                 });
 
-                // 2. Eksekusi Telegram (Berdasarkan Grup Kelas)
-                const telegramMsg = `🚨 *LAPORAN KETERLAMBATAN*\n\n` +
-                                    `📅 *Tanggal:* ${dateTime.date}\n` +
-                                    `⏰ *Jam:* ${dateTime.time}\n` +
-                                    `👤 *Nama:* ${lastTranscriptName}\n` +
-                                    `🏫 *Kelas:* ${selectedClass}\n` +
-                                    `📝 *Alasan:* ${lastTranscriptReason}`;
-
-                await sendToTelegram(targetGroupId, telegramMsg);
-
-                showMessage('✅ Berhasil! Data terkirim ke Pabbly & Grup ' + selectedClass, 'success');
-                
-                // Reset Form
-                lastTranscriptName = ""; lastTranscriptReason = "";
-                outputNameEl.textContent = "Tekan tombol 'Ucapkan Nama Murid'.";
-                outputReasonEl.textContent = "Tekan tombol 'Ucapkan Alasan Murid'.";
-                classDropdown.value = "";
+                document.getElementById("statusName").textContent = "Status: IDLE";
+                document.getElementById("statusReason").textContent = "Status: IDLE";
                 checkSendButton();
+            };
+        }
 
-            } catch (error) {
-                showMessage("Gagal: " + error.message, 'error');
-            } finally {
-                sendBtn.disabled = false;
+        function toggleRec(type) {
+            if (isRecording) {
+                rec.stop();
+            } else {
+                currentTarget = type;
+                document.getElementById(type === 'name' ? "liveTranscriptName" : "liveTranscriptReason").textContent = "Mendengarkan...";
+                rec.start();
+            }
+        }
+
+        function matchStudentByVoice(text) {
+            const t = text.toLowerCase();
+            const classRegex = /(sebelas|11|xi)\s*([a-i])/i;
+            const match = t.match(classRegex);
+            
+            let matchedClass = "";
+            let searchName = t;
+
+            if (match) {
+                matchedClass = "XI-" + match[2].toUpperCase();
+                searchName = t.replace(match[0], "").trim();
+            }
+
+            let filtered = studentDatabase;
+            if (matchedClass) {
+                filtered = filtered.filter(s => s.endsWith(matchedClass));
+                detectedClassCode = matchedClass;
+            }
+
+            const terms = searchName.split(" ").filter(x => x.length > 0);
+            filtered = filtered.filter(s => terms.every(term => s.toLowerCase().includes(term)));
+
+            if (filtered.length > 0) {
+                if(!detectedClassCode) detectedClassCode = filtered[0].split(' ').pop();
+                return filtered[0];
+            }
+            detectedClassCode = "";
+            return "SISWA TIDAK DIKENALI";
+        }
+
+        function checkSendButton() {
+            document.getElementById("sendBtn").disabled = !(finalMatchedStudent && lastTranscriptReason && !finalMatchedStudent.includes("TIDAK"));
+        }
+
+        document.getElementById("toggleNameBtn").onclick = () => toggleRec('name');
+        document.getElementById("toggleReasonBtn").onclick = () => toggleRec('reason');
+
+        document.getElementById("sendBtn").onclick = async () => {
+            const btn = document.getElementById("sendBtn");
+            const msg = document.getElementById("message");
+            const chatId = GROUP_MAPPING[detectedClassCode];
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            const dateStr = now.toLocaleDateString('id-ID');
+
+            btn.disabled = true;
+            msg.textContent = "TRANSMITTING...";
+            msg.className = "text-center text-xs mt-4 font-medium text-sky-400";
+
+            const pureName = finalMatchedStudent.replace(" " + detectedClassCode, "");
+            const telegramText = `🚨 *LAPORAN KEHADIRAN 2026*\n\n👤 *Nama:* ${pureName}\n🏫 *Kelas:* ${detectedClassCode}\n📝 *Alasan:* ${lastTranscriptReason}\n⏰ *Waktu:* ${timeStr}\n📅 *Tanggal:* ${dateStr}`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chat_id: chatId, text: telegramText, parse_mode: "Markdown" })
+                });
+
+                msg.textContent = "SUCCESSFULLY TRANSMITTED";
+                msg.className = "text-center text-xs mt-4 font-medium text-emerald-400";
+                
+                setTimeout(() => {
+                    finalMatchedStudent = ""; lastTranscriptReason = "";
+                    document.getElementById("outputName").textContent = "Sebutkan Nama & Kelas...";
+                    document.getElementById("outputReason").textContent = "Sebutkan alasan anda...";
+                    document.getElementById("liveTranscriptName").textContent = "...";
+                    document.getElementById("liveTranscriptReason").textContent = "...";
+                    msg.textContent = "";
+                }, 3000);
+
+            } catch (e) {
+                msg.textContent = "CONNECTION ERROR";
+                msg.className = "text-center text-xs mt-4 font-medium text-rose-400";
+                btn.disabled = false;
             }
         };
-
-        async function sendToTelegram(chatId, text) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-            return fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: text,
-                    parse_mode: "Markdown"
-                })
-            });
-        }
     </script>
 </body>
 </html>
-
