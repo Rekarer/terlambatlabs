@@ -45,41 +45,25 @@
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(36, 97, 228, 0.4);
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
         }
         .hidden-section { display: none; }
-        
-        /* Gaya Tombol Dinamis */
-        .btn-action {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .btn-recording {
-            background: rgba(225, 29, 72, 0.2) !important;
-            color: #fb7185 !important;
-            border-color: rgba(225, 29, 72, 0.4) !important;
+        .recording-pulse {
             animation: pulse 1.5s infinite;
         }
-
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); }
             100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
         }
-        .live-text {
-            color: #38bdf8;
-            font-style: italic;
-        }
     </style>
 </head>
 <body class="p-6">
 
-    <!-- LOGIN PAGE -->
     <div id="loginPage" class="w-full max-w-md glass-card rounded-[2rem] p-10 space-y-8">
         <div class="text-center">
             <h2 style="font-family: 'Sora';" class="text-3xl font-extrabold tracking-tight mb-2">Sign In</h2>
-            <p class="text-slate-400 text-sm">Pencatatan Keterlambatan</p>
-            <img src="logo-labs.png" alt="Yellow and blue school emblem with torch and text universitas negeri jakarta labschool" class="w-200 h-200 mx-auto mt-4">
+            <p class="text-slate-400 text-sm">Attendance Control Terminal</p>
         </div>
         <div class="space-y-4">
             <div>
@@ -95,57 +79,41 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
     <div id="mainDashboard" class="hidden-section w-full max-w-2xl glass-card rounded-[2.5rem] p-8 md:p-12 space-y-10">
         <header class="flex justify-between items-center border-b border-white/5 pb-6">
             <div>
-                <h1 style="font-family: 'Sora';" class="text-2xl font-bold text-white">Pencatatan Keterlambatan</h1>
-                <p id="userDisplay" class="text-xs text-sky-400 font-semibold tracking-tighter uppercase"></p>
-                <img src="logo-labs.png" alt="Logo Labs" class="w-160 h-160 absolute top-4 right-4 opacity-10 pointer-events-none">
+                <h1 style="font-family: 'Sora';" class="text-2xl font-bold text-white">Entry Protocol</h1>
+                <p id="userDisplay" class="text-xs text-accent text-sky-400 font-semibold tracking-tighter uppercase"></p>
             </div>
             <button onclick="location.reload()" class="text-slate-500 hover:text-white text-xs font-bold transition-colors">LOGOUT</button>
         </header>
 
-        <!-- SEKSI 01: NAMA -->
         <section class="space-y-4">
             <div class="flex items-center space-x-3">
                 <span class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs font-bold border border-sky-500/30">01</span>
                 <h3 class="font-semibold text-slate-200">IDENTIFIKASI SUARA</h3>
             </div>
             <div class="bg-black/20 rounded-3xl p-6 border border-white/5">
-                <div class="flex justify-between items-center mb-4">
-                    <div id="statusName" class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Status: Ready</div>
-                    <div class="text-[10px] uppercase tracking-[0.2em] text-sky-500 font-bold">Live Transcript</div>
-                </div>
-                <p id="liveTranscriptName" class="live-text text-sm mb-2 min-h-[1.2rem] opacity-70 italic">Menunggu suara...</p>
-                <p id="outputName" class="text-xl font-bold text-white min-h-[3rem] border-t border-white/5 pt-2">Sebutkan Nama & Kelas...</p>
-                
-                <div class="mt-6">
-                    <button id="toggleNameBtn" class="btn-action w-full bg-white/5 hover:bg-white/10 py-4 rounded-xl text-sm font-bold transition-all">
-                        START RECORDING
-                    </button>
+                <div id="statusName" class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-4">Status: Ready</div>
+                <p id="outputName" class="text-lg font-medium text-slate-300 min-h-[3rem]">Sebutkan Nama & Kelas...</p>
+                <div class="flex gap-3 mt-6">
+                    <button id="startNameBtn" class="flex-1 bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm font-bold border border-white/10 transition-all">START RECORDING</button>
+                    <button id="stopNameBtn" disabled class="px-6 bg-rose-500/20 text-rose-400 py-3 rounded-xl text-sm font-bold border border-rose-500/20 disabled:opacity-0 transition-all">STOP</button>
                 </div>
             </div>
         </section>
 
-        <!-- SEKSI 02: ALASAN -->
         <section class="space-y-4">
             <div class="flex items-center space-x-3">
                 <span class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold border border-purple-500/30">02</span>
                 <h3 class="font-semibold text-slate-200">ALASAN & KETERANGAN</h3>
             </div>
             <div class="bg-black/20 rounded-3xl p-6 border border-white/5">
-                <div class="flex justify-between items-center mb-4">
-                    <div id="statusReason" class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Status: Waiting</div>
-                    <div class="text-[10px] uppercase tracking-[0.2em] text-purple-500 font-bold">Live Transcript</div>
-                </div>
-                <p id="liveTranscriptReason" class="live-text text-sm mb-2 min-h-[1.2rem] opacity-70 italic">...</p>
-                <p id="outputReason" class="text-lg font-medium text-slate-300 min-h-[3rem] border-t border-white/5 pt-2">Sebutkan alasan anda...</p>
-                
-                <div class="mt-6">
-                    <button id="toggleReasonBtn" class="btn-action w-full bg-white/5 hover:bg-white/10 py-4 rounded-xl text-sm font-bold transition-all">
-                        START RECORDING
-                    </button>
+                <div id="statusReason" class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mb-4">Status: Waiting</div>
+                <p id="outputReason" class="text-lg font-medium text-slate-300 min-h-[3rem]">Sebutkan alasan anda...</p>
+                <div class="flex gap-3 mt-6">
+                    <button id="startReasonBtn" class="flex-1 bg-white/5 hover:bg-white/10 py-3 rounded-xl text-sm font-bold border border-white/10 transition-all">START RECORDING</button>
+                    <button id="stopReasonBtn" disabled class="px-6 bg-rose-500/20 text-rose-400 py-3 rounded-xl text-sm font-bold border border-rose-500/20 disabled:opacity-0 transition-all">STOP</button>
                 </div>
             </div>
         </section>
@@ -159,23 +127,29 @@
     </div>
 
     <script>
-        const USERS = { "Pak Farhan": "farhan123", "Pak Maulana": "maulana123" };
+        // --- DATA LOGIN ---
+        const USERS = {
+            "farhan": "fahe",
+            "maulana": "maulanaive"
+        };
 
         function handleLogin() {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             const error = document.getElementById('loginError');
+
             if(USERS[u] && USERS[u] === p) {
                 document.getElementById('loginPage').classList.add('hidden-section');
                 document.getElementById('mainDashboard').classList.remove('hidden-section');
                 document.getElementById('userDisplay').textContent = `Agent: ${u}`;
             } else {
-                error.textContent = "INVALID CREDENTIALS";
+                error.textContent = "Kesalahan Data, Pastikan username dan password benar.";
                 setTimeout(() => error.textContent = "", 3000);
             }
         }
 
-        // --- DATABASE SISWA ---
+        // --- DATABASE SISWA (XI-A - XI-I) ---
+        // (Data dipersingkat untuk efisiensi di sini, pastikan semua data dari turn sebelumnya dimasukkan ke array ini)
         const studentDatabase = [
             "Aghaffan Satria Akbar XI-A", "Anindya Nuraini Pakpahan XI-A", "Aquilanny Martoprawiro XI-A", "Ayesha Leilani XI-A", "Christian Joshua Nathaniel Bonatua Siagian XI-A", "Dion Raffael Prihandono XI-A", "Dirky Dimitri Suryono XI-A", "Dyah Kiara Kalyana Tantri XI-A", "Dymitri Tobias Davin Hasiholan Gultom XI-A", "Eijaz Eshanayyan XI-A", "Fabien Eanka Jedidiah XI-A", "Farras Baswara Sakti XI-A", "Farrenerol Gaizka Susanto XI-A", "Fathimah Angelica Alatas XI-A", "Gracia Abigail Laquisha Panjaitan XI-A", "I Gede Maheswara Chandra Karmany XI-A", "Keanan Athaya Kurniawan XI-A", "Khandra Rafa Fathian XI-A", "Leander Rafferty Karsten XI-A", "Malvalena Aneira Larasati XI-A", "Michaela Kalista Susilo XI-A", "Michalah Allaindon Hasudungan Siregar XI-A", "Muhammad Abdurrahman Rashad XI-A", "Muhammad Arkan Zakie XI-A", "Musyaffa Radhika Sani XI-A", "Nadhif Safei Daulay XI-A", "Nazhefa Arkanda Wahyudi XI-A", "Nazril Althafurrahman Ode XI-A", "Noah Jessenorio Parmenas XI-A", "Rafi Nashra Zafa Harahap XI-A", "Raihana Luthfiya Witoyo XI-A", "Salsabila Raihanah Mughni XI-A", "Shirley Aretha Yusarizqi XI-A", "Sultan Mikail Asadel Tayib Napis XI-A", "Zahra Khalisha Laksana XI-A", "Zaira Arianna Nifsan XI-A", "Zerrin Nashita Bahwal XI-A",
             "Ahmad Mahmud Movadhy Ramadhan XI-B", "Akmal Deasafaputra XI-B", "Aleesha Vanandya Shafiya Suprihadi XI-B", "Annisa Fadiyah Muti XI-B", "Bianca Alexandreta Situmorang XI-B", "Caesar Gerrardo Porta XI-B", "Daffa Lakeswara XI-B", "Diva Sabila Anwar XI-B", "Evan Alvaro Putra Sihombing XI-B", "Farshad Rayyan Akhtara XI-B", "Gilbert Timothy Olodeo Situmorang XI-B", "Isfan Jauhar Saladin XI-B", "Jenaia Aqeela Bariu Putri XI-B", "Jeovanna Cartenzia Sitepu XI-B", "Jethro Yordano Haposan Natongam XI-B", "Kirana Anindya Prasetya XI-B", "Kyra Torrita XI-B", "Lavina Jasmine Cettakeira Hermawan XI-B", "Lukas Rodo Dimitrio Situmorang XI-B", "Mayla Azzahra Putri XI-B", "Mhd. Chairul Azzam Al Faruk XI-B", "Muhammad Bimasto Agastya Kusumaputra XI-B", "Muhammad Kaisan Alfarizi XI-B", "Muhammad Rangga Maheswara XI-B", "Nabil Abrar XI-B", "Namira Aishwarya Prameswari XI-B", "Nata Sudira Adhisakti Satriadi XI-B", "Naufal Khair Al Ghifari XI-B", "Nicolas Nathan Abimanyu XI-B", "Raditya Fadhil Arinanda XI-B", "Raihan Amaroo Darmawan XI-B", "Syandana Zahin Hadinata XI-B", "Thoriq Abqory Salman XI-B", "Valerie Minerva Ascarya XI-B", "Vania Marissa Fayola Ritonga XI-B", "Yasmin Zahira Musadi XI-B", "Zahra Ramadhani Alfitri XI-B",
@@ -188,13 +162,17 @@
             "Airlangga Satria Aribowo XI-I", "Almaira Saffa Zainasta XI-I", "Amabel Nuralmira Siswono Putri XI-I", "Amira Hawra Anggia XI-I", "Athan Rashad Santoso XI-I", "Azaria Arundhati Sumito XI-I", "Daffa Gantari Adhyaksa XI-I", "Kenzie Asadel Kurniawan XI-I", "Kilau Kinasih Putri Khameshwari XI-I", "Mentari Alya Shaliha XI-I", "Mohammad Rafi Adiwitya XI-I", "Muhammad Azka Waliy Hasya XI-I", "Muhammad Bimo Indra Prakoso XI-I", "Muhammad Daffa Abinaya XI-I", "Nabila Carissa Balqis XI-I", "Nadheera Ayesha Putri Rahmat XI-I", "Oqandrue Aditya Muliono XI-I", "Qinthara Annaasha Shyana XI-I", "Safina Zahra XI-I", "Shafwah Khaldaa Perkasa XI-I", "Sharita Kayla Ardhani XI-I", "Sofie Fellah Adrian XI-I", "Syahra Athaya Yusuf XI-I", "Zakia Uli Kirana XI-I", "Zyta Zhafif Zainina Restianto XI-I"
         ];
 
+        // --- SPEECH & LOGIC ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let rec;
         let finalMatchedStudent = ""; 
         let lastTranscriptReason = "";
         let detectedClassCode = "";
         let currentTarget = null;
-        let isRecording = false;
+
+        // === PASTE YOUR WEBHOOK URL HERE ===
+        const WEBHOOK_URL = "https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY0MDYzZjA0M2Q1MjY4NTUzMDUxMzAi_pc";
+        // ====================================
 
         const TELEGRAM_TOKEN = "8094088254:AAHhx11hS3pBMyWrqjxKrd3oeRbA3joeB5c";
         const GROUP_MAPPING = {
@@ -206,64 +184,42 @@
         if (SpeechRecognition) {
             rec = new SpeechRecognition();
             rec.lang = "id-ID";
-            rec.interimResults = true;
+            rec.interimResults = false;
 
             rec.onstart = () => {
-                isRecording = true;
-                const isName = currentTarget === 'name';
-                const btn = isName ? document.getElementById("toggleNameBtn") : document.getElementById("toggleReasonBtn");
-                const status = isName ? document.getElementById("statusName") : document.getElementById("statusReason");
+                const btn = currentTarget === 'name' ? document.getElementById("startNameBtn") : document.getElementById("startReasonBtn");
+                const status = currentTarget === 'name' ? document.getElementById("statusName") : document.getElementById("statusReason");
+                const stopBtn = currentTarget === 'name' ? document.getElementById("stopNameBtn") : document.getElementById("stopReasonBtn");
                 
-                btn.textContent = "STOP RECORDING";
-                btn.classList.add('btn-recording');
+                btn.classList.add('recording-pulse', 'border-rose-500/50', 'text-rose-400');
                 status.textContent = "Status: LISTENING...";
+                stopBtn.disabled = false;
             };
 
             rec.onresult = (event) => {
-                let liveText = "";
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    liveText += event.results[i][0].transcript;
-                }
+                // FITUR: Hapus titik dan koma
+                let rawText = event.results[0][0].transcript;
+                let cleanText = rawText.replace(/[.,]/g, "").trim();
 
-                const liveDisplay = currentTarget === 'name' ? document.getElementById("liveTranscriptName") : document.getElementById("liveTranscriptReason");
-                liveDisplay.textContent = `"${liveText.trim()}"`;
-
-                if (event.results[0].isFinal) {
-                    let cleanText = liveText.replace(/[.,]/g, "").trim();
-                    if (currentTarget === 'name') {
-                        finalMatchedStudent = matchStudentByVoice(cleanText);
-                        document.getElementById("outputName").textContent = finalMatchedStudent;
-                    } else {
-                        lastTranscriptReason = cleanText;
-                        document.getElementById("outputReason").textContent = cleanText.toUpperCase();
-                    }
+                if (currentTarget === 'name') {
+                    finalMatchedStudent = matchStudentByVoice(cleanText);
+                    document.getElementById("outputName").textContent = finalMatchedStudent;
+                } else {
+                    lastTranscriptReason = cleanText;
+                    document.getElementById("outputReason").textContent = cleanText.toUpperCase();
                 }
             };
 
             rec.onend = () => {
-                isRecording = false;
-                const btnName = document.getElementById("toggleNameBtn");
-                const btnReason = document.getElementById("toggleReasonBtn");
-                
-                [btnName, btnReason].forEach(b => {
-                    b.textContent = "START RECORDING";
-                    b.classList.remove('btn-recording');
-                });
-
+                const btn = document.getElementById("startNameBtn");
+                const btn2 = document.getElementById("startReasonBtn");
+                [btn, btn2].forEach(b => b.classList.remove('recording-pulse', 'border-rose-500/50', 'text-rose-400'));
                 document.getElementById("statusName").textContent = "Status: IDLE";
                 document.getElementById("statusReason").textContent = "Status: IDLE";
+                document.getElementById("stopNameBtn").disabled = true;
+                document.getElementById("stopReasonBtn").disabled = true;
                 checkSendButton();
             };
-        }
-
-        function toggleRec(type) {
-            if (isRecording) {
-                rec.stop();
-            } else {
-                currentTarget = type;
-                document.getElementById(type === 'name' ? "liveTranscriptName" : "liveTranscriptReason").textContent = "Mendengarkan...";
-                rec.start();
-            }
         }
 
         function matchStudentByVoice(text) {
@@ -300,45 +256,98 @@
             document.getElementById("sendBtn").disabled = !(finalMatchedStudent && lastTranscriptReason && !finalMatchedStudent.includes("TIDAK"));
         }
 
-        document.getElementById("toggleNameBtn").onclick = () => toggleRec('name');
-        document.getElementById("toggleReasonBtn").onclick = () => toggleRec('reason');
+        document.getElementById("startNameBtn").onclick = () => { currentTarget = 'name'; rec.start(); };
+        document.getElementById("startReasonBtn").onclick = () => { currentTarget = 'reason'; rec.start(); };
+        document.getElementById("stopNameBtn").onclick = () => rec.stop();
+        document.getElementById("stopReasonBtn").onclick = () => rec.stop();
 
         document.getElementById("sendBtn").onclick = async () => {
             const btn = document.getElementById("sendBtn");
             const msg = document.getElementById("message");
             const chatId = GROUP_MAPPING[detectedClassCode];
             const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID');
-            const dateStr = now.toLocaleDateString('id-ID');
+
+            // === FORMAT: HH.MM.SS ===
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            const timeStr = `${hh}.${mm}.${ss}`;
+
+            // === FORMAT: DD/MM/YYYY ===
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mo = String(now.getMonth() + 1).padStart(2, '0');
+            const yyyy = now.getFullYear();
+            const dateStr = `${dd}/${mo}/${yyyy}`;
+
+            // Extract just the name (without class code at the end)
+            const pureName = finalMatchedStudent.replace(/\s+XI-[A-I]$/, "").trim().toUpperCase();
+
+            // === PIPE-SEPARATED FORMAT: TIME|NAME|CLASS|REASON|DATE ===
+            const formattedPayload = `${timeStr}|${pureName}|${detectedClassCode}|${lastTranscriptReason}|${dateStr}`;
+
+            // Telegram message (kept for Telegram groups)
+            const telegramText = `🚨 *LAPORAN KEHADIRAN 2026*\n\n👤 *Nama:* ${pureName}\n🏫 *Kelas:* ${detectedClassCode}\n📝 *Alasan:* ${lastTranscriptReason}\n⏰ *Waktu:* ${timeStr}\n📅 *Tanggal:* ${dateStr}\n\n\`${formattedPayload}\``;
 
             btn.disabled = true;
             msg.textContent = "TRANSMITTING...";
             msg.className = "text-center text-xs mt-4 font-medium text-sky-400";
 
-            const pureName = finalMatchedStudent.replace(" " + detectedClassCode, "");
-            const telegramText = `🚨 *LAPORAN KEHADIRAN 2026*\n\n👤 *Nama:* ${pureName}\n🏫 *Kelas:* ${detectedClassCode}\n📝 *Alasan:* ${lastTranscriptReason}\n⏰ *Waktu:* ${timeStr}\n📅 *Tanggal:* ${dateStr}`;
+            const requests = [];
+
+            // Send to Telegram if chatId is found
+            if (chatId) {
+                requests.push(
+                    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ chat_id: chatId, text: telegramText, parse_mode: "Markdown" })
+                    })
+                );
+            }
+
+            // Send to webhook if URL is set
+            if (WEBHOOK_URL && WEBHOOK_URL !== "YOUR_WEBHOOK_URL_HERE") {
+                requests.push(
+                    fetch(WEBHOOK_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            text: formattedPayload,
+                            time: timeStr,
+                            name: pureName,
+                            class: detectedClassCode,
+                            reason: lastTranscriptReason,
+                            date: dateStr
+                        })
+                    })
+                );
+            }
 
             try {
-                await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ chat_id: chatId, text: telegramText, parse_mode: "Markdown" })
-                });
+                const results = await Promise.allSettled(requests);
+                const anySuccess = results.some(r => r.status === "fulfilled");
 
-                msg.textContent = "SUCCESSFULLY TRANSMITTED";
-                msg.className = "text-center text-xs mt-4 font-medium text-emerald-400";
-                
-                setTimeout(() => {
-                    finalMatchedStudent = ""; lastTranscriptReason = "";
-                    document.getElementById("outputName").textContent = "Sebutkan Nama & Kelas...";
-                    document.getElementById("outputReason").textContent = "Sebutkan alasan anda...";
-                    document.getElementById("liveTranscriptName").textContent = "...";
-                    document.getElementById("liveTranscriptReason").textContent = "...";
-                    msg.textContent = "";
-                }, 3000);
+                if (anySuccess || requests.length === 0) {
+                    msg.textContent = `✓ TRANSMITTED: ${formattedPayload}`;
+                    msg.className = "text-center text-xs mt-4 font-medium text-emerald-400";
 
+                    // Reset after 4 seconds
+                    setTimeout(() => {
+                        finalMatchedStudent = "";
+                        lastTranscriptReason = "";
+                        detectedClassCode = "";
+                        document.getElementById("outputName").textContent = "Sebutkan Nama & Kelas...";
+                        document.getElementById("outputReason").textContent = "Sebutkan alasan anda...";
+                        document.getElementById("statusName").textContent = "Status: Ready";
+                        document.getElementById("statusReason").textContent = "Status: Waiting";
+                        msg.textContent = "";
+                        btn.disabled = true;
+                    }, 4000);
+                } else {
+                    throw new Error("All requests failed");
+                }
             } catch (e) {
-                msg.textContent = "CONNECTION ERROR";
+                msg.textContent = "CONNECTION ERROR — CHECK NETWORK";
                 msg.className = "text-center text-xs mt-4 font-medium text-rose-400";
                 btn.disabled = false;
             }
