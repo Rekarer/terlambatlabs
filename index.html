@@ -12,21 +12,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            /* BACKGROUND UTAMA DENGAN GAMBAR + OVERLAY GELAP UNTUK KONTRAK TEKS */
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.75)), src=('Gedung-Labsky.Jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            padding: 1.5rem;
-        }
-
         /* Efek glass-card tetap dipertahankan dengan backdrop blur */
         .glass-card {
             background: rgba(15, 23, 42, 0.4);
@@ -36,7 +21,6 @@
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6);
             transition: all 0.2s ease;
         }
-        
         /* Hover efek pada card */
         .glass-card:hover {
             border-color: rgba(255, 255, 255, 0.2);
